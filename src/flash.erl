@@ -21,6 +21,9 @@ ensure_started(App) ->
 start() ->
     flash_deps:ensure(),
     ensure_started(crypto),
+    ensure_started(salt),
+    lager:start(),
+    inets:start(),
     application:start(flash).
 
 
