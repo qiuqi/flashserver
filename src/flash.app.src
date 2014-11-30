@@ -1,0 +1,9 @@
+%% -*- erlang -*-
+{application, flash,
+ [{description, "flash"},
+  {vsn, "0.1"},
+  {modules, []},
+  {registered, []},
+  {mod, {'flash_app', []}},
+  {env, []},
+  {applications, [kernel, stdlib, crypto]}]}.
