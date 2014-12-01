@@ -11,15 +11,12 @@ pull(Req)->
         ok.
 
 message(Response)->
-        http_show(Response, ["k"]),
+        http_show(Response, mochijson2:encode([{<<"type">>, <<"keepalive">>}])),
         receive
                 cancel->
                         void;
                 _ ->
                         good
         after 5000->
-                      http_show(Response, ["55555"])
-        end,
-        message(Response).
-
-
+                      message(Response)
+        end.
