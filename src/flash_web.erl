@@ -1,3 +1,5 @@
+%%% vim: expandtab tabstop=4 shiftwidth=4
+
 %% @author Mochi Media <dev@mochimedia.com>
 %% @copyright 2010 Mochi Media <dev@mochimedia.com>
 
@@ -22,29 +24,29 @@ stop() ->
     mochiweb_http:stop(?MODULE).
 
 loop(Req, DocRoot) ->
-	"/" ++ Path = Req:get(path),
+    "/" ++ Path = Req:get(path),
     ?B([Req:get(peer), " -> ", Path]),
     ?B([DocRoot, Path]),
     try
-            case Req:get(method) of
-                    Method when Method =:= 'GET'; Method =:= 'HEAD' ->
-                            a_url:get_url_dispatch(Req, DocRoot, Path);
-                    'POST' ->
-                            a_url:post_url_dispatch(Req, DocRoot, Path);
-                    'PUT' ->
-                            a_url:put_url_dispatch(Req, DocRoot, Path);
-                    _ ->
-                            Req:respond({501, [], []})
-            end
+        case Req:get(method) of
+            Method when Method =:= 'GET'; Method =:= 'HEAD' ->
+                a_url:get_url_dispatch(Req, DocRoot, Path);
+            'POST' ->
+                a_url:post_url_dispatch(Req, DocRoot, Path);
+            'PUT' ->
+                a_url:put_url_dispatch(Req, DocRoot, Path);
+            _ ->
+                Req:respond({501, [], []})
+        end
     catch
-            Type:What ->
-                    Report = ["web request failed",
-                              {path, Path},
-                              {type, Type}, {what, What},
-                              {trace, erlang:get_stacktrace()}],
-                    error_logger:error_report(Report),
-                    Req:respond({500, [{"Content-Type", "text/plain"}],
-                                 "request failed, sorry\n"})
+        Type:What ->
+            Report = ["web request failed",
+                      {path, Path},
+                      {type, Type}, {what, What},
+                      {trace, erlang:get_stacktrace()}],
+            error_logger:error_report(Report),
+            Req:respond({500, [{"Content-Type", "text/plain"}],
+                         "request failed, sorry\n"})
     end.
 
 
@@ -52,7 +54,7 @@ loop(Req, DocRoot) ->
 %% Internal API
 
 get_option(Option, Options) ->
-        {proplists:get_value(Option, Options), proplists:delete(Option, Options)}.
+    {proplists:get_value(Option, Options), proplists:delete(Option, Options)}.
 
 %%
 %% Tests
@@ -61,9 +63,9 @@ get_option(Option, Options) ->
 -include_lib("eunit/include/eunit.hrl").
 
 you_should_write_a_test() ->
-        ?assertEqual(
-           "No, but I will!",
-           "Have you written any tests?"),
-        ok.
+    ?assertEqual(
+       "No, but I will!",
+       "Have you written any tests?"),
+    ok.
 
 -endif.

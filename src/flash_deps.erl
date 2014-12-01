@@ -1,3 +1,5 @@
+%%% vim: expandtab tabstop=4 shiftwidth=4
+
 %% @author Mochi Media <dev@mochimedia.com>
 %% @copyright 2010 Mochi Media <dev@mochimedia.com>
 
@@ -35,13 +37,13 @@ new_siblings(Module) ->
     Existing = deps_on_path(),
     SiblingEbin = filelib:wildcard(local_path(["deps", "*", "ebin"], Module)),
     Siblings = [filename:dirname(X) || X <- SiblingEbin,
-                           ordsets:is_element(
-                             filename:basename(filename:dirname(X)),
-                             Existing) =:= false],
+                                       ordsets:is_element(
+                                         filename:basename(filename:dirname(X)),
+                                         Existing) =:= false],
     lists:filter(fun filelib:is_dir/1,
                  lists:append([[filename:join([X, "ebin"]),
                                 filename:join([X, "include"])] ||
-                                  X <- Siblings])).
+                               X <- Siblings])).
 
 
 %% @spec ensure(Module) -> ok

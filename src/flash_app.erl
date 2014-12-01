@@ -1,3 +1,4 @@
+%%% vim: expandtab tabstop=4 shiftwidth=4
 %% @author Mochi Media <dev@mochimedia.com>
 %% @copyright flash Mochi Media <dev@mochimedia.com>
 
