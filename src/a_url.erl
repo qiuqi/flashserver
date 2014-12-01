@@ -6,6 +6,7 @@ get_url_dispatch(Req, DocRoot, Path) ->
 	ListPath = string:tokens(Path, "/"),
 	case ListPath of
             ["test", "test"]->a_test:test(Req);
+            ["long", "pull"]->a_long:pull(Req);
             _ -> 
                     Req:serve_file(Path, DocRoot)
     end.
