@@ -39,7 +39,7 @@ channel=xxxx
 nonce=yyyy
 auth=box({channel}, {nonce}, {ServePub}, {dynamic_private_key})
 msg_nonce=xxxxxxx
-msg=box({msg_plain}, {msg_nonce}, {key_id_pub_key}, {pub_identity_privkey})
+msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {pub_identity_privkey})
 
 返回：
 { "type" : "bool", "value" : true/false}
