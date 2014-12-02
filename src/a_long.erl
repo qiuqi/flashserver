@@ -9,7 +9,7 @@ http_show(Response, Content)->
 
 pull(Req, Pubkey)->
     Response = Req:ok({"text/plain", chunked}),
-    users:setUidPid(Pubkey, self()),
+    pubsub:subscribe(Pubkey),
     message(Response),
     ok.
 
@@ -17,11 +17,11 @@ message(Response)->
     http_show(Response, mochijson2:encode([{<<"time">>, list_to_binary(utils:longtime_list())}])),
     receive
         cancel->
-                    ?B("cancle"),
+            ?B("cancle"),
             void;
         {Message} ->
-                    ?B(["message", Message]),
-                    http_show(Response, mochijson2:encode([{<<"message">>, list_to_binary(Message)}]))
+            ?B(["message", Message]),
+            http_show(Response, mochijson2:encode([{<<"message">>, list_to_binary(Message)}]))
     after 1000->
               message(Response)
     end.
@@ -29,13 +29,8 @@ message(Response)->
 
 
 push(Req)->
-        QS = Req:parse_post(),
-        Pubkey = ?GETVALUE("pubkey", QS),
-        Message = ?GETVALUE("message", QS),
-        case users:isAlive(Pubkey) of
-                {true, Pid} ->
-                        Pid ! {Message},
-                        ?HTTP_OK(Req);
-                _ ->
-                        ?HTTP_FAILED(Req)
-        end.
+    QS = Req:parse_post(),
+    Pubkey = ?GETVALUE("pubkey", QS),
+    Message = ?GETVALUE("message", QS),
+    pubsub:publish(Pubkey, Message),
+    ?HTTP_OK(Req).
