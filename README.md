@@ -55,7 +55,9 @@ GET /subscribe/{dynamic_public_key}/{channel}/{nonce}/box({channel}, {nonce}, {S
 ```
 
 -------------------------------------------------------------------------
+
 安装使用
+========
 1. 在Erlang最新版本下保持测试
 2. 需要安装https://github.com/freza/salt
 
