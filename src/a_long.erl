@@ -32,5 +32,5 @@ push(Req)->
     QS = Req:parse_post(),
     Pubkey = ?GETVALUE("pubkey", QS),
     Message = ?GETVALUE("message", QS),
-    pubsub:publish(Pubkey, Message),
+    pubsub:notify(Pubkey, Message),
     ?HTTP_OK(Req).
