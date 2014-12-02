@@ -24,6 +24,7 @@ start() ->
     flash_deps:ensure(),
     ensure_started(crypto),
     ensure_started(salt),
+    ensure_started(gproc),
     lager:start(),
     inets:start(),
     application:start(flash).
@@ -32,4 +33,5 @@ start() ->
 %% @spec stop() -> ok
 %% @doc Stop the flash server.
 stop() ->
+    application:stop(gproc),
     application:stop(flash).
