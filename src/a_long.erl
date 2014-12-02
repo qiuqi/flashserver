@@ -19,7 +19,7 @@ message(Response)->
         cancel->
             ?B("cancle"),
             void;
-        {Message} ->
+        {_Pid, _Tag, Message} ->
             ?B(["message", Message]),
             http_show(Response, mochijson2:encode([{<<"message">>, list_to_binary(Message)}]))
     after 1000->
