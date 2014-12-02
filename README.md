@@ -30,8 +30,9 @@ based on mada's suggestion.
 
 
 3. 推送
-POST /publish
 ```
+POST /publish
+
 from={pub_identity_key}
 dynamic={dynamic_public_key}
 channel=xxxx
@@ -39,16 +40,15 @@ nonce=yyyy
 auth=box({channel}, {nonce}, {ServePub}, {dynamic_private_key})
 msg_nonce=xxxxxxx
 msg=box({msg_plain}, {msg_nonce}, {key_id_pub_key}, {pub_identity_privkey})
-```
 
 返回：
-```
 { "type" : "bool", "value" : true/false}
 ```
 
 4. 订阅
-GET /subscribe/{dynamic_public_key}/{channel}/{nonce}/box({channel}, {nonce}, {ServePub}, {dynamic_private_key})
 ```
+GET /subscribe/{dynamic_public_key}/{channel}/{nonce}/box({channel}, {nonce}, {ServePub}, {dynamic_private_key})
+
 { "type" : "message", "nonce" : {msg_nonce}, "body" : {msg}}
 或
 { "type" : "bool", "value" : false}
@@ -56,6 +56,6 @@ GET /subscribe/{dynamic_public_key}/{channel}/{nonce}/box({channel}, {nonce}, {S
 
 -------------------------------------------------------------------------
 安装使用
-1、在Erlang最新版本下保持测试
-2、需要安装https://github.com/freza/salt
+1. 在Erlang最新版本下保持测试
+2. 需要安装https://github.com/freza/salt
 
