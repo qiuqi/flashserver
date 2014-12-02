@@ -11,6 +11,8 @@ test(Req)->
     test2(),
     test3(),
     test4(),
+    test5(),
+    test6(),
 
     ?HTTP_OK(Req).
 %%测试用例1
@@ -63,6 +65,30 @@ test4()->
     Encrypted = salt:crypto_secretbox(PlainText, Nonce, SecretKey),
     {ok, Decrypted} = salt:crypto_secretbox_open(Encrypted, Nonce, SecretKey),
     compare("test4", PlainText, Decrypted).
+
+%%
+test5()->
+    {Apk, Ask}= salt:crypto_sign_keypair(),
+    PlainText = <<"Plain text to be signed">>,
+    Sm = salt:crypto_sign(PlainText, Ask),
+    {ok, Verify} = salt:crypto_sign_open(Sm, Apk),
+    compare("test5", PlainText, Verify).
+
+test6()->
+    Sk = salt:crypto_random_bytes(32),
+    Pt = <<"Authentic message.">>,
+    Au = salt:crypto_onetimeauth(Pt, Sk),
+    ?B(["Au:", Au]),
+    V1 = salt:crypto_onetimeauth_verify(Au, Pt, Sk),
+    receive
+    after 30000->
+        ok
+    end,
+    V2 = salt:crypto_onetimeauth_verify(Au, Pt, Sk),
+    ?B(["verify:", V1, V2]).
+
+
+
 
 
 

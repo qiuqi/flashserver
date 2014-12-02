@@ -11,10 +11,12 @@
 
 -define(GETVALUE(K, L), proplists:get_value(K, L)).
 -define(B64(F), base64:encode(F)).
+-define(JSON(F), binary_to_list(list_to_binary(mochijson2:encode(F)))).
 
 -define(HTTP_OK(F), j:http_show_json(F, j:jsonOk())).
 -define(HTTP_FAILED(F), j:http_show_json(F, j:jsonFailed())).
 
 -record(state, {pid2id, id2pid, hpid2id, hid2pid, helper2Msg, db1, db2}).
+-record(skeypair, {pk, sk, pk_hex, sk_hex}).
 
 -endif.

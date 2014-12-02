@@ -1,7 +1,9 @@
 %%% vim: expandtab tabstop=4 shiftwidth=4
 
 -module(a_long).
--compile([export_all]).
+-export([pull/2, push/1]).
+-export([subscribe/5]).
+-export([publish/1]).
 -include("a_include.hrl").
 
 http_show(Response, Content)->
@@ -34,3 +36,47 @@ push(Req)->
     Message = ?GETVALUE("message", QS),
     pubsub:notify(Pubkey, Message),
     ?HTTP_OK(Req).
+
+jsonMessage(Message, Nonce)->
+    {struct,
+     [
+      {"type", ?U("message")},
+      {"nonce", ?U(Nonce)},
+      {"body", ?U(Message)}
+     ]}.
+
+publish(Req)->
+    QS = Req:parse_post(),
+    From = ?GETVALUE("from", QS),
+    DynamicPK = ?GETVALUE("dynamic", QS),
+    Channel = ?GETVALUE("channel", QS),
+    Nonce = ?GETVALUE("nonce", QS),
+    Auth = ?GETVALUE("auth", QS),
+    MsgNonce = ?GETVALUE("msg_nonce", QS),
+    Msg = ?GETVALUE("msg", QS),
+    DPK = hex:hexstr_to_bin(DynamicPK),
+    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, DPK),
+    if
+            Channel==ChannelName ->
+                    Message = ?JSON(jsonMessage(Msg, MsgNonce)),
+                    pubsub:notify(Channel, Message),
+                    ?HTTP_OK(Req);
+            true ->
+                    ?HTTP_FAILED(Req)
+    end.
+
+subscribe(Req, DynamicPK, Channel, Nonce, Auth)->
+    DPK = hex:hexstr_to_bin(DynamicPK), 
+    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, DPK), 
+    ?B(["sub", Channel, ChannelName]),
+    if 
+            Channel==ChannelName ->
+                Response = Req:ok({"text/plain", chunked}),
+                pubsub:subscribe(Channel),
+                message(Response);
+            true ->
+                ?HTTP_FAILED(Req)
+    end.
+
+
+

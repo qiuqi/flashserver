@@ -44,8 +44,9 @@ upgrade() ->
 %% @doc supervisor callback.
 init([]) ->
     Web = web_specs(flash_web, 8080),
+    Keys = general_specs(keys),
     Users = general_specs(users),
-    Processes = [Web, Users],
+    Processes = [Web, Keys, Users],
     Strategy = {one_for_one, 10, 10},
     {ok,
      {Strategy, lists:flatten(Processes)}}.

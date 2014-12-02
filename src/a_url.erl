@@ -7,8 +7,10 @@
 get_url_dispatch(Req, DocRoot, Path) ->
     ListPath = string:tokens(Path, "/"),
     case ListPath of
-        ["test", "test"]->a_test:test(Req);
-        ["long", "pull", Pubkey]->a_long:pull(Req, Pubkey);
+            ["test", "test"]->a_test:test(Req);
+            ["long", "pull", Pubkey]->a_long:pull(Req, Pubkey);
+            ["server", "pubkey"]->a_server:pubkey(Req);
+            ["subscribe", DynamicPK, Channel, Nonce, Auth]->a_long:subscribe(Req, DynamicPK, Channel, Nonce, Auth);
         _ -> 
             Req:serve_file(Path, DocRoot)
     end.
@@ -16,7 +18,8 @@ get_url_dispatch(Req, DocRoot, Path) ->
 post_url_dispatch(Req, _DocRoot, Path) ->
     ListPath = string:tokens(Path, "/"),
     case ListPath of
-        ["long", "push"]->a_long:push(Req);
+            ["long", "push"]->a_long:push(Req);
+            ["public"]->a_long:publish(Req);
         _ -> Req:not_found()
     end.
 
