@@ -33,4 +33,5 @@ start() ->
 %% @spec stop() -> ok
 %% @doc Stop the flash server.
 stop() ->
+    application:stop(gproc),
     application:stop(flash).
