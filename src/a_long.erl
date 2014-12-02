@@ -13,12 +13,14 @@ pull(Req)->
     ok.
 
 message(Response)->
-    http_show(Response, mochijson2:encode([{<<"type">>, <<"keepalive">>}])),
+    http_show(Response, mochijson2:encode([{<<"time">>, list_to_binary(utils:longtime_list())}])),
     receive
         cancel->
+                    ?B("cancle"),
             void;
         _ ->
+                    ?B("good"),
             good
-    after 5000->
+    after 1000->
               message(Response)
     end.
