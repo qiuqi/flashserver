@@ -15,4 +15,6 @@
 -define(HTTP_OK(F), j:http_show_json(F, j:jsonOk())).
 -define(HTTP_FAILED(F), j:http_show_json(F, j:jsonFailed())).
 
+-record(state, {pid2id, id2pid, hpid2id, hid2pid, helper2Msg, db1, db2}).
+
 -endif.

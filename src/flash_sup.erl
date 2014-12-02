@@ -44,7 +44,8 @@ upgrade() ->
 %% @doc supervisor callback.
 init([]) ->
     Web = web_specs(flash_web, 8080),
-    Processes = [Web],
+    Users = general_specs(users),
+    Processes = [Web, Users],
     Strategy = {one_for_one, 10, 10},
     {ok,
      {Strategy, lists:flatten(Processes)}}.
@@ -56,3 +57,9 @@ web_specs(Mod, Port) ->
     {Mod,
      {Mod, start, [WebConfig]},
      permanent, 5000, worker, dynamic}.
+
+general_specs(Mod)->
+            {Mod,
+                     {Mod, start_link, []},
+                     permanent, 25000, worker, dynamic}.
+
