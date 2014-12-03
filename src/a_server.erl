@@ -4,12 +4,13 @@
 
 
 jsonServerPk(ServerPk)->
-        {struct,
-         [
-          {"r", ?U("ok")},
-          {"serverpk", ?U(ServerPk)}
-         ]}.
+    {struct,
+     [
+      {"type", ?U("ServerPubKey")},
+      {"r", ?U("ok")},
+      {"serverpk", ?U(ServerPk)}
+     ]}.
 
 pubkey(Req)->
-        {ok, ServerPk} = keys:getServerPK(),
-        j:http_show_json(Req, jsonServerPk(ServerPk)).
+    {ok, ServerPk} = keys:getServerPK(),
+    j:http_show_json(Req, jsonServerPk(ServerPk)).
