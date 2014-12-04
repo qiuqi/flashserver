@@ -54,7 +54,7 @@ publish(Req)->
     MsgNonce = ?GETVALUE("msg_nonce", QS),
     Msg = ?GETVALUE("msg", QS),
     FromPK = hex:hexstr_to_bin(From),
-    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, FromPK),
+    {ok, ChannelName} = keys:boxOpen(base64:decode(Auth), Nonce, FromPK),
     if
             Channel==ChannelName ->
                     ChannelId = From++"."++Channel,
@@ -67,7 +67,7 @@ publish(Req)->
 
 subscribe(Req, PubIdentityKey, SubIdentityKey, Channel, Nonce, Auth)->
     SubIdentityKeyBin = hex:hexstr_to_bin(SubIdentityKey), 
-    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, SubIdentityKeyBin), 
+    {ok, ChannelName} = keys:boxOpen(base64:decode(Auth), Nonce, SubIdentityKeyBin), 
     ?B(["sub", Channel, ChannelName]),
     if 
             Channel==ChannelName ->
