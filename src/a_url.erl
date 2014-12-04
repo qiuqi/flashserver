@@ -19,7 +19,7 @@ post_url_dispatch(Req, _DocRoot, Path) ->
     ListPath = string:tokens(Path, "/"),
     case ListPath of
             ["long", "push"]->a_long:push(Req);
-            ["public"]->a_long:publish(Req);
+            ["publish"]->a_long:publish(Req);
         _ -> Req:not_found()
     end.
 
