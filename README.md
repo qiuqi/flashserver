@@ -38,7 +38,7 @@ channel=xxxx
 nonce=yyyy
 auth=box({channel}, {nonce}, {ServePub}, {pub_identity_privkey})
 msg_nonce=xxxxxxx
-msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {pub_identity_privkey})
+msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
 
 
 注意： server端并不需要关心msg的box实现，它的内容是由pub方自己负责的， server端只需要对auth内容认证，验证auth的内容确实是由{channel}实现的。
