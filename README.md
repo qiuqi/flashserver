@@ -34,12 +34,14 @@ based on mada's suggestion.
 POST /publish
 
 from={pub_identity_key}
-dynamic={dynamic_public_key}
 channel=xxxx
 nonce=yyyy
-auth=box({channel}, {nonce}, {ServePub}, {dynamic_private_key})
+auth=box({channel}, {nonce}, {ServePub}, {pub_identity_privkey})
 msg_nonce=xxxxxxx
 msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {pub_identity_privkey})
+
+
+注意： server端并不需要关心msg的box实现，它的内容是由pub方自己负责的， server端只需要对auth内容认证，验证auth的内容确实是由{channel}实现的。
 
 返回：
 { "type" : "bool", "value" : true/false}
@@ -47,11 +49,14 @@ msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {pub_identity_privkey})
 
 4. 订阅
 ```
-GET /subscribe/{dynamic_public_key}/{channel}/{nonce}/box({channel}, {nonce}, {ServePub}, {dynamic_private_key})
+GET /subscribe/{sub_public_key}/{channel}/{nonce}/{auth}
+其中auth=box({channel}, {nonce}, {ServePub}, {sub_private_key})
 
 { "type" : "message", "nonce" : {msg_nonce}, "body" : {msg}}
 或
 { "type" : "bool", "value" : false}
+
+注意： server端需要对auth认证，如果认证成功，则允许sub接收到{channel}内的msg，如果失败，返回错误。
 ```
 
 -------------------------------------------------------------------------
