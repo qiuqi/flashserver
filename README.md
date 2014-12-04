@@ -53,6 +53,8 @@ GET /subscribe/{sub_identity_key}/{channel}/{nonce}/{auth}
 其中auth=box({channel}, {nonce}, {ServePub}, {sub_identity_private_key})
 
 { "type" : "message", "nonce" : {msg_nonce}, "body" : {msg}}
+subscribe需要对msg解密，方式为
+msg_plain=box_open({msg}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
 或
 { "type" : "bool", "value" : false}
 
