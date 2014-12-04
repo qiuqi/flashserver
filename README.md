@@ -38,7 +38,7 @@ channel=xxxx
 nonce=yyyy
 auth=box({channel}, {nonce}, {ServePub}, {pub_identity_privkey})
 msg_nonce=xxxxxxx
-msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
+msg=Base64(box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key}))
 
 返回：
 { "type" : "Accept", "value" : true/false}
@@ -51,7 +51,7 @@ msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
 
 ```
 GET /subscribe/{pub_identity_key}/{sub_identity_key}/{channel}/{nonce}/{auth}
-其中auth=box({channel}, {nonce}, {ServePub}, {sub_identity_private_key})
+其中auth=Base64(box({channel}, {nonce}, {ServePub}, {sub_identity_private_key}))
 
 { "type" : "message", "nonce" : {msg_nonce}, "body" : {msg}}
 subscribe需要对msg解密，方式为
