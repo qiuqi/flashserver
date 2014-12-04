@@ -48,14 +48,14 @@ jsonMessage(Message, Nonce)->
 publish(Req)->
     QS = Req:parse_post(),
     From = ?GETVALUE("from", QS),
-    DynamicPK = ?GETVALUE("dynamic", QS),
+    %%DynamicPK = ?GETVALUE("dynamic", QS),
     Channel = ?GETVALUE("channel", QS),
     Nonce = ?GETVALUE("nonce", QS),
     Auth = ?GETVALUE("auth", QS),
     MsgNonce = ?GETVALUE("msg_nonce", QS),
     Msg = ?GETVALUE("msg", QS),
-    DPK = hex:hexstr_to_bin(DynamicPK),
-    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, DPK),
+    FromPK = hex:hexstr_to_bin(From),
+    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, FromPK),
     if
             Channel==ChannelName ->
                     Message = ?JSON(jsonMessage(Msg, MsgNonce)),
