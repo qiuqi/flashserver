@@ -10,7 +10,7 @@ get_url_dispatch(Req, DocRoot, Path) ->
             ["test", "test"]->a_test:test(Req);
             ["long", "pull", Pubkey]->a_long:pull(Req, Pubkey);
             ["server", "pubkey"]->a_server:pubkey(Req);
-            ["subscribe", DynamicPK, Channel, Nonce, Auth]->a_long:subscribe(Req, DynamicPK, Channel, Nonce, Auth);
+            ["subscribe", PubIdentityKey, SubIdentityKey, Channel, Nonce, Auth]->a_long:subscribe(Req, PubIdentityKey, SubIdentityKey, Channel, Nonce, Auth);
         _ -> 
             Req:serve_file(Path, DocRoot)
     end.

@@ -2,7 +2,7 @@
 
 -module(a_long).
 -export([pull/2, push/1]).
--export([subscribe/5]).
+-export([subscribe/6]).
 -export([publish/1]).
 -include("a_include.hrl").
 
@@ -48,7 +48,6 @@ jsonMessage(Message, Nonce)->
 publish(Req)->
     QS = Req:parse_post(),
     From = ?GETVALUE("from", QS),
-    %%DynamicPK = ?GETVALUE("dynamic", QS),
     Channel = ?GETVALUE("channel", QS),
     Nonce = ?GETVALUE("nonce", QS),
     Auth = ?GETVALUE("auth", QS),
@@ -58,21 +57,23 @@ publish(Req)->
     {ok, ChannelName} = keys:boxOpen(Auth, Nonce, FromPK),
     if
             Channel==ChannelName ->
+                    ChannelId = From++"."++Channel,
                     Message = ?JSON(jsonMessage(Msg, MsgNonce)),
-                    pubsub:notify(Channel, Message),
+                    pubsub:notify(ChannelId, Message),
                     ?HTTP_OK(Req);
             true ->
                     ?HTTP_FAILED(Req)
     end.
 
-subscribe(Req, DynamicPK, Channel, Nonce, Auth)->
-    DPK = hex:hexstr_to_bin(DynamicPK), 
-    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, DPK), 
+subscribe(Req, PubIdentityKey, SubIdentityKey, Channel, Nonce, Auth)->
+    SubIdentityKeyBin = hex:hexstr_to_bin(SubIdentityKey), 
+    {ok, ChannelName} = keys:boxOpen(Auth, Nonce, SubIdentityKeyBin), 
     ?B(["sub", Channel, ChannelName]),
     if 
             Channel==ChannelName ->
                 Response = Req:ok({"text/plain", chunked}),
-                pubsub:subscribe(Channel),
+                ChannelId = PubIdentityKey++"."++Channel, 
+                pubsub:subscribe(ChannelId),
                 message(Response);
             true ->
                 ?HTTP_FAILED(Req)
