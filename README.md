@@ -44,7 +44,7 @@ msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
 注意： server端并不需要关心msg的box实现，它的内容是由pub方自己负责的， server端只需要对auth内容认证，验证auth的内容确实是由{channel}实现的。
 
 返回：
-{ "type" : "bool", "value" : true/false}
+{ "type" : "Accept", "value" : true/false}
 ```
 
 4. 订阅
@@ -56,7 +56,7 @@ GET /subscribe/{sub_identity_key}/{channel}/{nonce}/{auth}
 subscribe需要对msg解密，方式为
 msg_plain=box_open({msg}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
 或
-{ "type" : "bool", "value" : false}
+{ "type" : "Accept", "value" : false}
 
 注意： server端需要对auth认证，如果认证成功，则允许sub接收到{channel}内的msg，如果失败，返回错误。
 ```
