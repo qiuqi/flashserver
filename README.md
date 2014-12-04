@@ -49,8 +49,8 @@ msg=box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {pub_identity_privkey})
 
 4. 订阅
 ```
-GET /subscribe/{sub_public_key}/{channel}/{nonce}/{auth}
-其中auth=box({channel}, {nonce}, {ServePub}, {sub_private_key})
+GET /subscribe/{sub_identity_key}/{channel}/{nonce}/{auth}
+其中auth=box({channel}, {nonce}, {ServePub}, {sub_identity_private_key})
 
 { "type" : "message", "nonce" : {msg_nonce}, "body" : {msg}}
 或
