@@ -16,13 +16,14 @@ pull(Req, Pubkey)->
     ok.
 
 message(Response)->
-    http_show(Response, mochijson2:encode([{<<"type">>, <<"Time">>}, {<<"time">>, list_to_binary(utils:longtime_list())}])),
     receive
         cancel->
             void;
         {_Pid, _Tag, Message} ->
-            http_show(Response, Message)
+            http_show(Response, Message),
+            message(Response)
     after 1000->
+            http_show(Response, mochijson2:encode([{<<"type">>, <<"Time">>}, {<<"time">>, list_to_binary(utils:longtime_list())}])),
             message(Response)
     end.
 
