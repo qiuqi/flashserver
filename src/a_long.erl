@@ -35,11 +35,10 @@ push(Req)->
     pubsub:notify(Pubkey, Message),
     ?HTTP_OK(Req).
 
-jsonMessage(Message, Nonce)->
+jsonMessage(Message)->
     {struct,
      [
             {"type", ?U("Message")},
-            {"nonce", ?U(Nonce)},
             {"body", ?U(Message)}
             ]}.
 
@@ -49,9 +48,8 @@ publish(Req)->
     Channel = ?GETVALUE("channel", QS),
     Nonce = ?GETVALUE("nonce", QS),
     Auth = ?GETVALUE("auth", QS),
-    MsgNonce = ?GETVALUE("msg_nonce", QS),
     Msg = ?GETVALUE("msg", QS),
-    case publish_core(From, Channel, Nonce, Auth, MsgNonce, Msg) of
+    case publish_core(From, Channel, Nonce, Auth, Msg) of
         true ->
             ?HTTP_OK(Req);
         false ->
@@ -64,9 +62,8 @@ test_publish(Req)->
     Channel = "default",
     Nonce = "000000000001417747086284",
     Auth = "9f9c2f5785d933",
-    MsgNonce = "000000000001417747086285",
     Msg = "bde9fc18",
-    case publish_core(From, Channel, Nonce, Auth, MsgNonce, Msg) of
+    case publish_core(From, Channel, Nonce, Auth, Msg) of
         true ->
             ?HTTP_OK(Req);
         false ->
@@ -74,14 +71,14 @@ test_publish(Req)->
     end.
 
 
-publish_core(From, Channel, Nonce, Auth, MsgNonce, Msg)->
+publish_core(From, Channel, Nonce, Auth, Msg)->
     FromPK = hex:hexstr_to_bin(From),
     {ok, ServerSK} = keys:getServerSKBin(),
     {ok, ChannelName} = salt:crypto_box_open(hex:hexstr_to_bin(Auth), list_to_binary(Nonce), FromPK, ServerSK),
     case list_to_binary(Channel) =:= ChannelName of
         true ->
             ChannelId = From ++ "." ++ Channel,
-            Message = ?JSON(jsonMessage(Msg, MsgNonce)),
+            Message = ?JSON(jsonMessage(Msg)),
             pubsub:notify(ChannelId, Message),
             true;
         false ->
