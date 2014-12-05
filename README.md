@@ -18,6 +18,7 @@ based on mada's suggestion.
    * from:节点B的公钥
    * nonce:随机字符串
 
+   ```
    A将收到信息，格式如下：
 
     {
@@ -27,42 +28,43 @@ based on mada's suggestion.
         "to":"消息接收端的公钥字符串",
         "nonce":"随机字符串"
     }
+   ```
 
 3. 推送
 
-```
-POST /publish
+   ```
+   POST /publish
 
-from={pub_identity_key}
-channel=xxxx
-nonce=yyyy
-auth=box({channel}, {nonce}, {ServePub}, {pub_identity_privkey})
-msg_nonce=xxxxxxx
-msg=Base64(box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key}))
+   from={pub_identity_key}
+   channel=xxxx
+   nonce=yyyy
+   auth=box({channel}, {nonce}, {ServePub}, {pub_identity_privkey})
+   msg_nonce=xxxxxxx
+   msg=Hex(box({msg_plain}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key}))
 
-返回：
-{ "type" : "Accept", "value" : true/false}
-```
+   返回：
+   { "type" : "Accept", "value" : true/false}
+   ```
 
-* 注意： server端并不需要关心msg的box实现，它的内容是由pub方自己负责的， server端只需要对auth内容认证，验证auth的内容确实是由{channel}实现的。
-* 注意： {pub_identity_key}.{channel}构成了群的唯一标识
+   * 注意： server端并不需要关心msg的box实现，它的内容是由pub方自己负责的， server端只需要对auth内容认证，验证auth的内容确实是由{channel}实现的。
+   * 注意： {pub_identity_key}.{channel}构成了群的唯一标识
 
 4. 订阅
 
-```
-GET /subscribe/{pub_identity_key}/{sub_identity_key}/{channel}/{nonce}/{auth}
-其中auth=Base64(box({channel}, {nonce}, {ServePub}, {sub_identity_private_key}))
+   ```
+   GET /subscribe/{pub_identity_key}/{sub_identity_key}/{channel}/{nonce}/{auth}
+   其中auth=Hex(box({channel}, {nonce}, {ServePub}, {sub_identity_private_key}))
 
-{ "type" : "message", "nonce" : {msg_nonce}, "body" : {msg}}
-subscribe需要对msg解密，方式为
-msg_plain=box_open({msg}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
-或
-{ "type" : "Accept", "value" : false}
+   { "type" : "message", "nonce" : {msg_nonce}, "body" : {msg}}
+   subscribe需要对msg解密，方式为
+   msg_plain=box_open({msg}, {msg_nonce}, {dynamic_public_key}, {dynamic_private_key})
+   或
+   { "type" : "Accept", "value" : false}
 
-```
+   ```
 
-* 注意： server端需要对auth认证，如果认证成功，则允许sub接收到{channel}内的msg，如果失败，返回错误。
-* 注意： {pub_identity_key}.{channel}构成了群的唯一标识
+   * 注意： server端需要对auth认证，如果认证成功，则允许sub接收到{channel}内的msg，如果失败，返回错误。
+   * 注意： {pub_identity_key}.{channel}构成了群的唯一标识
 
 -------------------------------------------------------------------------
 
