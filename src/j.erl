@@ -54,12 +54,12 @@ testDecode()->
 jsonOk()->
     {struct,
      [
-      {"type", ?U("accept")},
+      {"type", ?U("Accept")},
       {"value", true}
      ]}.
 jsonFailed()->
     {struct,
      [
-      {"type", ?U("accept")},
+      {"type", ?U("Accept")},
       {"value", false}
      ]}.

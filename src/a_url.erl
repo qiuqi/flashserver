@@ -8,6 +8,7 @@ get_url_dispatch(Req, DocRoot, Path) ->
     ListPath = string:tokens(Path, "/"),
     case ListPath of
             ["test", "test"]->a_test:test(Req);
+            ["test", "publish"]->a_long:test_publish(Req);
             ["long", "pull", Pubkey]->a_long:pull(Req, Pubkey);
             ["server", "pubkey"]->a_server:pubkey(Req);
             ["subscribe", PubIdentityKey, SubIdentityKey, Channel, Nonce, Auth]->a_long:subscribe(Req, PubIdentityKey, SubIdentityKey, Channel, Nonce, Auth);
