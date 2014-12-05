@@ -16,12 +16,12 @@ pull(Req, Pubkey)->
     ok.
 
 message(Response)->
-    http_show(Response, mochijson2:encode([{<<"time">>, list_to_binary(utils:longtime_list())}])),
+    http_show(Response, mochijson2:encode([{<<"type">>, <<"Time">>}, {<<"time">>, list_to_binary(utils:longtime_list())}])),
     receive
         cancel->
             void;
         {_Pid, _Tag, Message} ->
-            http_show(Response, mochijson2:encode([{<<"message">>, list_to_binary(Message)}]))
+            http_show(Response, Message)
     after 1000->
             message(Response)
     end.
@@ -88,7 +88,7 @@ publish_core(From, Channel, Nonce, Auth, Msg)->
 
 subscribe(Req, PubIdentityKey, SubIdentityKey, Channel, Nonce, Auth)->
     SubIdentityKeyBin = hex:hexstr_to_bin(SubIdentityKey), 
-    {ok, ChannelName} = keys:boxOpen(base64:decode(Auth), Nonce, SubIdentityKeyBin), 
+    {ok, ChannelName} = keys:boxOpen(hex:hexstr_to_bin(Auth), list_to_binary(Nonce), SubIdentityKeyBin), 
     case list_to_binary(Channel) =:= ChannelName of
         true ->
             Response = Req:ok({"text/plain", chunked}),
